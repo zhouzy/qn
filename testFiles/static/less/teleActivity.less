@@ -1,0 +1,218 @@
+/**
+ * 外部框架布局样式
+ */
+
+@left-part-width: 300px; // 左侧部分宽度
+@left-closed-width: 10px; // 左侧收缩后宽度
+@base-border-color: #e2eaec; // 基础border颜色
+@base-header-height: 55px; // 基础头部高度
+@toggle-time: 0.3s; // 展开/收缩动画时间
+
+/*左侧导航栏*/
+.tele-activity__left-part {
+    position: fixed;
+    z-index: 9;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: @left-part-width;
+
+    background-color: #fff;
+    border-right: 1px solid @base-border-color;
+
+    -webkit-transition: all @toggle-time;
+    -moz-transition: all @toggle-time;
+    -o-transition: all @toggle-time;
+    transition: all @toggle-time;
+}
+
+.tele-activity__left-part_close {
+    -webkit-transform: translateX(-(@left-part-width - @left-closed-width));
+    -moz-transform: translateX(-(@left-part-width - @left-closed-width));
+    -ms-transform: translateX(-(@left-part-width - @left-closed-width));
+    -o-transform: translateX(-(@left-part-width - @left-closed-width));
+    transform: translateX(-(@left-part-width - @left-closed-width));
+}
+
+.tele-activity__left-part-content {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+}
+
+.tele-activity__left-part-header {
+    width: 100%;
+    height: @base-header-height;
+    line-height: @base-header-height;
+
+    border-bottom: 1px solid @base-border-color;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.tele-activity__left-part-header-sidebar {
+    padding-right: 20px;
+    font-size: 16px;
+}
+
+.tele-activity__left-menu {
+    position: absolute;
+    top: @base-header-height;
+    bottom: 0;
+    width: 100%;
+    padding-bottom: 10px;
+
+    overflow: auto;
+}
+
+.tele-activity__left-menu-header {
+    padding: 15px 0 5px 0;
+    margin: 0 0 10px 20px;
+
+    font-size: 12px;
+    font-weight: bolder;
+    color: #333;
+
+    border-bottom: 1px solid @base-border-color;
+}
+
+.tele-activity__left-menu-panel {
+    margin-bottom: 15px;
+}
+
+.tele-activity__left-menu-list {
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.tele-activity__left-menu-list-item {
+    position: relative;
+
+    &.active {
+        .tele-activity__left-menu-item-link {
+            border-left-color: #21d376;
+            background-color: #eff4f5;
+        }
+    }
+}
+
+.tele-activity__left-menu-item-link {
+    position: relative;
+    display: block;
+    padding: 0 45px 0 17px;
+    height: 35px;
+    line-height: 35px;
+
+    color: #374051;
+
+    border-left: 3px solid #fff;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+
+    cursor: pointer;
+}
+
+.tele-activity__left-menu-item-link:hover,
+.tele-activity__left-menu-item-link:focus {
+    color: #374051;
+    background-color: #eff4f5 ;
+}
+
+.tele-activity__toggle-btn-box {
+    position: absolute;
+    z-index: 9;
+    top: 0;
+    bottom: 0;
+    right: -8px;
+    margin: auto;
+    height: 46px;
+}
+
+.tele-activity__toggle-btn {
+    padding: 10px 2px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #fff;
+
+    cursor: pointer;
+}
+
+.tele-activity__toggle-btn:hover {
+    color: #337ab7;
+}
+
+/*右侧部分*/
+.tele-activity__right-part {
+    position:absolute;
+    //z-index: 1;//造成modal弹出框的背景高于内容
+    top: 0;
+    left: @left-part-width;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+    -webkit-transition: left @toggle-time;
+    -moz-transition: left @toggle-time;
+    -o-transition: left @toggle-time;
+    transition: left @toggle-time;
+}
+
+.tele-activity__right-part_open {
+    left: @left-closed-width;
+	.bottom-collapse-toolbar{
+		left : @left-closed-width
+	}
+}
+
+.tele-activity__right-part-header {
+    width: 100%;
+    height: @base-header-height;
+    line-height: @base-header-height;
+
+    border-bottom: 1px solid @base-border-color;
+
+    background-color: #fff;
+}
+
+.tele-activity__right-part-header-sidebar {
+    float: left;
+    font-size: 16px;
+    width:100%;
+}
+
+.tele-activity__right-content {
+    height: 100%;
+}
+.bottom-collapse-toolbar{
+	background: #fff;
+	font-size:14px;
+	box-shadow: 0 -1px 3px rgba(0,0,0,0.15);
+	padding:0 15px;
+	position: fixed;
+	bottom:-70px;
+	left:@left-part-width;
+	right:0;
+	height:60px;
+	z-index: 20000;
+	border-top:1px solid #f2f2f2;
+	text-align:right;
+	-webkit-transition: all ease 0.4s;
+	-moz-transition: all ease 0.4s;
+	-o-transition: all ease 0.4s;
+	transition: all ease 0.4s;
+	&.show{
+		bottom:0;
+	}
+	.left-btn{
+		position: absolute;
+		left:5px;
+	}
+}

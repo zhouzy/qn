@@ -1,0 +1,181 @@
+*{
+    box-sizing: border-box;
+}
+@font-face {font-family: 'webfont';
+    src: url('../font/siyuanheiti/webfont.eot'); /* IE9*/
+    src: url('../font/siyuanheiti/webfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('../font/siyuanheiti/webfont.woff') format('woff'), /* chrome、firefox */
+    url('../font/siyuanheiti/webfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+    url('../font/siyuanheiti/webfont.svg#webfont') format('svg'); /* iOS 4.1- */
+}
+.web-font{
+    font-family:"webfont" !important;
+    font-size:30px;
+    font-style:normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale;
+}
+html,body{
+    margin:0;
+    padding:0;
+    height:100%;
+    font-family:"Microsoft YaHei", "微软雅黑", "STHeiti", "WenQuanYi Micro Hei", SimSun, sans-serif;
+}
+.top-bar{
+    position: fixed;
+    height:65px;
+    line-height:65px;
+    padding-left:5px;
+    z-index:20000;
+    padding-top:10px;
+    .logo{
+        height:45px;
+    }
+}
+.swapper-container{
+    position:absolute;
+    top:65px;
+    left:0;
+    right:0;
+    bottom:0;
+    overflow:hidden;
+    .content{
+        height:100%;
+        width:100%;
+        background-size:cover;
+        font-size:0;
+        position:absolute;
+        transition:all 1s;
+        .left-part,.right-part{
+            width:50%;
+            height:100%;
+            padding-top:10%;
+            display:inline-block;
+            vertical-align: top;
+        }
+        .part-body{
+            vertical-align: top;
+            margin-top:28px;
+            font-size:26px;
+            line-height:70px;
+            .web-font;
+        }
+        .part-footer{
+            margin-top:38px;
+            vertical-align: top;
+        }
+    }
+    #cphoneBox{
+        background-image:url('../images/welcome/1.png');
+        left:0;
+        .left-part{
+            padding-left:14%;
+            padding-right:10%;
+        }
+    }
+    #appBox{
+        left:100%;
+        background-image: url('../images/welcome/2.png');
+        .right-part{
+            padding-left:8%;
+            padding-right:10%;
+        }
+        .qrcode-img{
+            position:absolute;
+            right:30px;
+            bottom:30px;
+            width:160px;
+            height:160px;
+        }
+    }
+    .swapper-btns{
+        position:fixed;
+        height:40px;
+        line-height:40px;
+        text-align:center;
+        bottom:0;
+        left:0;
+        right:0;
+        .swapper-btn{
+            display:inline-block;
+            height:24px;
+            width:24px;
+            border-radius:50%;
+            border:2px solid #fff;
+            margin:0 5px;
+            background:#BBB;
+            box-shadow: 0 0 2px #BBB;
+            &.active{
+                background:#00deef;
+            }
+        }
+
+    }
+    .response-img{
+        height:0;
+        width:80%;
+        padding-top:80%;
+        position: relative;
+        top:-50px;
+        img{
+            position: absolute;
+            left:0;
+            right:0;
+            top:0;
+            bottom:0;
+            width:100%;
+            height:100%;
+        }
+    }
+}
+.btn{
+    display:inline-block;
+    width:160px;
+    height:50px;
+    padding:16px 5px 16px 34px;
+    background:#00c1d8;
+    color:#fff;
+    font-size:16px;
+    text-decoration: none;
+    border-radius: 4px;
+    position:relative;
+    text-align:center;
+    margin-right:10px;
+    vertical-align: top;
+    img{
+        position: absolute;
+        width:26px;
+        height:26px;
+        left:5px;
+        top:12px;
+    }
+}
+#appBox{
+    .btn{
+        background:#004350;
+    }
+}
+@media(max-width:1024px){
+    .swapper-container{
+        .content{
+            .part-body{
+                font-size:20px;
+            }
+        }
+    }
+    .swapper-container{
+        #cphoneBox{
+            .left-part{
+                padding-left:5%;
+                padding-right:5%;
+            }
+        }
+        #appBox{
+            .right-part{
+                padding-left:5%;
+                padding-right:5%;
+            }
+        }
+    }
+}

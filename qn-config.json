@@ -1,0 +1,11 @@
+/**
+ * Created by zhouzhongyu on 2017/5/24.
+ */
+{
+  "rootPath" : "/",
+  "fileList" : [{
+    "originFileName" : "activity",
+    "path" : "testFiles/static/css/",
+    "relFile" : ["/views/myActivity.jsp","/views/uploadNewQuestion.jsp"]
+  }]
+}

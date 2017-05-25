@@ -1,0 +1,83 @@
+@border-color:#e2eaec;
+@header-height:55px;
+
+//@left-part-width: 300px; // 左侧部分宽度
+@left-closed-width: 10px; // 左侧收缩后宽度
+@toggle-time: 0.3s; // 展开/收缩动画时间
+
+
+
+.note-contain-wrapper{
+    .right-content{
+        padding-top: 75px;
+        height:100%;
+
+        overflow:auto;
+        .right-content-panel{
+            width:100%;
+        }
+    }
+
+    .table-content{
+        .grid{
+            padding: 15px 0 5px 0;
+            margin-bottom: 50px;
+            background:#fff;
+            border: solid transparent;
+            border-width: 0 15px 0;
+            border-radius: 3px;
+            overflow: auto;
+            table{
+                table-layout: auto;
+                td{
+                    -webkit-user-select: text;
+                    -moz-user-select: text;
+                    -ms-user-select: text;
+                    white-space: nowrap;
+                    color:#374051;
+                }
+                thead tr{
+                    height:45px;
+                    th{
+                        font-weight:normal;
+                    }
+
+                }
+                tbody tr{
+                    height:45px;
+                    &:nth-child(even){
+                        background: #F5F5F5;
+                    }
+                    &:hover{
+                        background: #f9fff9;
+                    }
+                }
+            }
+        }
+    }
+    #toolbar{
+        background: #fff;
+        font-size:14px;
+        box-shadow: 0 -1px 3px rgba(0,0,0,0.15);
+        padding:0 15px;
+        position: fixed;
+        bottom:-70px;
+        left: 0;
+        right:0;
+        height:60px;
+        z-index: 999;
+        border-top:1px solid #f2f2f2;
+        text-align:right;
+        -webkit-transition: all ease 0.4s;
+        -moz-transition: all ease 0.4s;
+        -o-transition: all ease 0.4s;
+        transition: all ease 0.4s;
+        &.show{
+            bottom:0;
+        }
+        .left-btn{
+            position: absolute;
+            left:5px;
+        }
+    }
+}
