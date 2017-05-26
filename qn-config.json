@@ -1,8 +1,11 @@
 {
+  "autoMode" : true,
   "rootPath" : "",
   "fileList" : [{
     "originFileName" : "activity.css",
     "path" : "testFiles/static/css/",
     "relFile" : ["testFiles/views/myActivity.jsp","testFiles/views/uploadNewQuestion.jsp"]
-  }]
+  }],
+  "resourceRoot" : "testFiles/static/css",
+  "relFileRoot" : "testFiles/views/"
 }

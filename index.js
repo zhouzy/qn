@@ -7,10 +7,13 @@ var config = require('./qn-config.json');
 var Q = require('q');
 var path = require('path');
 (function(){
+
     'use static';
+
     var _rootPath = config.rootPath;//文件根目录
+
     var _getFileMd5Code = function(file,_cb){
-        //从文件创建一个可读流
+        console.log("计算资源文件:[" + file + "]哈希值");
         var stream = fs.createReadStream(file);
         var fsHash = crypto.createHash('md5');
 
@@ -26,7 +29,7 @@ var path = require('path');
     };
 
     var _isModify = function(file){
-        console.log("判断文件[" + file + "]是否存在");
+        console.log("判断文件[%s]是否存在",file);
         var defer = Q.defer();
         fs.exists(file,function(isExist){
             defer.resolve(!isExist);
@@ -35,9 +38,6 @@ var path = require('path');
     };
 
     var _changeRel = function(relFile,oldFileName,fileName){
-        console.log(relFile);
-        console.log(oldFileName);
-        console.log(fileName);
         var EOL = (process.platform === 'win32' ? '\r\n' : '\n');
         var text = fs.readFileSync(relFile, 'utf8');
         // 将文件按行拆成数组
@@ -74,11 +74,10 @@ var path = require('path');
      * 如果当前目录下存在相同MD5值的文件，则表示未改动，跳过
      * 如果不存在相同MD5值的文件，表示有改动，则在同目录下生成重命名后的文件，并修改引用的JSP文件
      */
-    var _main = function(){
+    var handleResource = function(){
         var _rootPath = config.rootPath,
             _fileList = config.fileList,
             _temp = _loadTemp();
-
         _fileList.forEach(function(fileItem){
             var _originName = fileItem.originFileName,
                 _arr = _originName.split('\.'),
@@ -87,8 +86,6 @@ var path = require('path');
                 _path = fileItem.path,
                 _file = path.join(_rootPath,_path,_originName),
                 _relFiles = fileItem.relFiles;
-
-            console.log("计算资源文件:[" + _file + "]哈希值");
             _getFileMd5Code(_file,function(md5){
                 console.log("哈希值:" + md5);
                 var md5File = _file.replace(_fileName,md5);
@@ -114,6 +111,43 @@ var path = require('path');
                 });
             });
         });
+    };
+
+    var _findResourceInPath = function(_relativePath,_array){
+        var files = fs.readdirSync(path.join(_rootPath + _relativePath));
+        var promiseList = [];
+        files.forEach(function (filename) {
+            var _resource = {};
+            var _defer = Q.defer();
+            promiseList.push(_defer.promise);
+            fs.stat(path.join(_rootPath,_relativePath,filename), function (err, stats) {
+                if (err) throw err;
+                if (stats.isFile()){
+                    _resource.originFileName = filename;
+                    _resource.path = _relativePath;
+                    _array.push(_resource);
+                    _defer.resolve(_resource);
+                    console.log("读取到文件信息:%s",JSON.stringify(_resource));
+                }
+                else if (stats.isDirectory()) {
+                    promiseList = promiseList.concat(_findResourceInPath(path.join(_relativePath,filename),_array));
+                    setTimeout(function(){_defer.resolve({})},0);
+                }
+            });
+        });
+        return promiseList;
+    };
+    var _main = function(){
+        if(config.autoMode){
+            //扫描所有的resource文件，然后找出所有引用该文件的JSP文件
+            var _arr = [];
+            Q.all(_findResourceInPath(path.join(_rootPath,config.resourceRoot),_arr)).then(function(){
+                console.log(_arr);
+            });
+        }
+        else{
+            handleResource();
+        }
     };
     _main();
 })();
