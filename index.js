@@ -5,12 +5,13 @@ var crypto = require('crypto');
 var fs = require('fs');
 var config = require('./qn-config.json');
 var Q = require('q');
+var path = require('path');
 (function(){
     'use static';
-    var _rootPath = "";//文件根目录
+    var _rootPath = config.rootPath;//文件根目录
     var _getFileMd5Code = function(file,_cb){
         //从文件创建一个可读流
-        var stream = fs.createReadStream(_rootPath + file);
+        var stream = fs.createReadStream(file);
         var fsHash = crypto.createHash('md5');
 
         stream.on('data', function(d) {
@@ -34,6 +35,9 @@ var Q = require('q');
     };
 
     var _changeRel = function(relFile,oldFileName,fileName){
+        console.log(relFile);
+        console.log(oldFileName);
+        console.log(fileName);
         var EOL = (process.platform === 'win32' ? '\r\n' : '\n');
         var text = fs.readFileSync(relFile, 'utf8');
         // 将文件按行拆成数组
@@ -53,7 +57,7 @@ var Q = require('q');
 
     var _loadTemp = function(){
         try{
-            var _temp = fs.readFileSync(process.cwd()+"/.qn_temp",'utf-8');
+            var _temp = fs.readFileSync(path.join(process.cwd(),".qn_temp"),'utf-8');
             if(_temp){
                 return JSON.parse(_temp);
             }
@@ -74,14 +78,15 @@ var Q = require('q');
         var _rootPath = config.rootPath,
             _fileList = config.fileList,
             _temp = _loadTemp();
+
         _fileList.forEach(function(fileItem){
             var _originName = fileItem.originFileName,
                 _arr = _originName.split('\.'),
                 _fileName = _arr[0],
                 _suffixes = _arr[1],
                 _path = fileItem.path,
-                _file = _rootPath + _path + _originName,
-                _relFile = fileItem.relFile;
+                _file = path.join(_rootPath,_path,_originName),
+                _relFiles = fileItem.relFiles;
 
             console.log("计算资源文件:[" + _file + "]哈希值");
             _getFileMd5Code(_file,function(md5){
@@ -95,7 +100,8 @@ var Q = require('q');
                         var _oldName = _temp[_fileName] || _fileName;
                         //资源文件修改后，修改所有引用了该文件的JSP文件
                         console.log("修改引用的文件");
-                        _relFile.forEach(function(relFile){
+                        _relFiles.forEach(function(relFile){
+                            relFile = path.join(_rootPath,relFile);
                             console.log(relFile + "->");
                             _changeRel(relFile,_oldName + "." + _suffixes,md5 + "." + _suffixes);
                             _temp[_fileName] = md5;
