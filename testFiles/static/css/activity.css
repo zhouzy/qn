@@ -38,6 +38,7 @@
   padding-left: 15px;
 }
 .header-nav-list a {
+
   color: #448ee1;
 }
 .header-nav-list,
@@ -49,6 +50,7 @@
   margin-top: 0;
   margin-right: 30px;
 }
+
 .user-info-name a {
   color: #428bca;
 }

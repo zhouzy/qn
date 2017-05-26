@@ -1,11 +1,8 @@
-/**
- * Created by zhouzhongyu on 2017/5/24.
- */
 {
-  "rootPath" : "/",
+  "rootPath" : "",
   "fileList" : [{
-    "originFileName" : "activity",
+    "originFileName" : "activity.css",
     "path" : "testFiles/static/css/",
-    "relFile" : ["/views/myActivity.jsp","/views/uploadNewQuestion.jsp"]
+    "relFile" : ["testFiles/views/myActivity.jsp","testFiles/views/uploadNewQuestion.jsp"]
   }]
 }
