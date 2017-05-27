@@ -113,6 +113,13 @@ var path = require('path');
         });
     };
 
+    /**
+     * 搜索出所有的资源文件
+     * @param _relativePath
+     * @param _array
+     * @returns {Array}
+     * @private
+     */
     var _findResourceInPath = function(_relativePath,_array){
         var files = fs.readdirSync(path.join(_rootPath + _relativePath));
         var promiseList = [];
@@ -130,8 +137,7 @@ var path = require('path');
                     console.log("读取到文件信息:%s",JSON.stringify(_resource));
                 }
                 else if (stats.isDirectory()) {
-                    promiseList = promiseList.concat(_findResourceInPath(path.join(_relativePath,filename),_array));
-                    setTimeout(function(){_defer.resolve({})},0);
+                    _defer.resolve(Q.all(_findResourceInPath(path.join(_relativePath,filename),_array)));
                 }
             });
         });
@@ -143,6 +149,7 @@ var path = require('path');
             var _arr = [];
             Q.all(_findResourceInPath(path.join(_rootPath,config.resourceRoot),_arr)).then(function(){
                 console.log(_arr);
+
             });
         }
         else{
