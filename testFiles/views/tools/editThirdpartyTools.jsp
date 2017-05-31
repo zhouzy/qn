@@ -6,7 +6,7 @@
     <title>编辑第三方集成</title>
     <%@include file="/views/include/pageHeader.jsp" %>
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/selfField.css">
-    <%--<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/ef3763efa8e67025e2caf0ced6deb474.css">--%>
+    <%--<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/userField.css">--%>
 </head>
 
 <body>

@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>选择自定义字段种类</title>
     <%@include file="/views/include/pageHeader.jsp" %>
-    <%--<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/ef3763efa8e67025e2caf0ced6deb474.css">--%>
+    <%--<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/userField.css">--%>
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/selfField.css">
     <script src="<%=request.getContextPath()%>/script/lib/PCASClass.js"></script>
 </head>

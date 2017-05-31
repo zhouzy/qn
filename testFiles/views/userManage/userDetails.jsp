@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/script/lib/summernote/summernote.css">
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/innerFrame.css">
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/customDetail.css">
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/e3293c2acd190ccbe6c6431b13b34494.css">
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/userDetails.css">
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/script/lib/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.css">
     <script src="<%=request.getContextPath()%>/script/lib/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
     <script src="<%=request.getContextPath()%>/script/lib/bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
