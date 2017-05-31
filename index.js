@@ -36,6 +36,13 @@ var path = require('path');
         return defer.promise;
     };
 
+    /**
+     * 修改引用文件引用资源地址
+     * @param relFile
+     * @param oldFileName
+     * @param fileName
+     * @private
+     */
     var _changeRel = function(relFile,oldFileName,fileName){
         var EOL = (process.platform === 'win32' ? '\r\n' : '\n');
         var text = fs.readFileSync(relFile, 'utf8');
@@ -44,14 +51,28 @@ var path = require('path');
         arr = arr.map(function (line,index){
             if(line.indexOf(oldFileName) >= 0){
                 console.log("替换源文件第" + index + "行");
+                return _updateLink(line,oldFileName,fileName);
             }
-            return line.replace(oldFileName,fileName);
         });
         try{
             fs.writeFileSync(relFile, arr.join(EOL), 'utf8');
         }catch(e){
             console.dir(e);
         }
+    };
+
+    /**
+     * 修改文件中对资源文件的引用，如果是第一次替换，保存一个原始文件名到标签上
+     * @param line
+     * @param oldFileName
+     * @param fileName
+     * @private
+     */
+    var _updateLink = function(line,oldFileName,fileName){
+        if(line.indexOf('data-origin-file') < 0){
+            line = line.replace(/\s/," data-origin-file=" + oldFileName);
+        }
+        return line.replace(oldFileName,fileName);
     };
 
     var _loadTemp = function(){
@@ -67,8 +88,6 @@ var path = require('path');
             return {};
         }
     };
-
-
 
     /**
      * 搜索出所有的资源文件
@@ -126,7 +145,8 @@ var path = require('path');
             }
         }
     };
-/**
+
+    /**
      * 从配置文件中，依次读取配置的文件，计算MD5值
      * 如果当前目录下存在相同MD5值的文件，则表示未改动，跳过
      * 如果不存在相同MD5值的文件，表示有改动，则在同目录下生成重命名后的文件，并修改引用的JSP文件
