@@ -23,7 +23,6 @@ var path = require('path');
 
         stream.on('end', function() {
             var md5 = fsHash.digest('hex');
-            console.log("文件的MD5是：%s", md5);
             _cb && _cb(md5);
         });
     };
@@ -75,41 +74,46 @@ var path = require('path');
      * 如果不存在相同MD5值的文件，表示有改动，则在同目录下生成重命名后的文件，并修改引用的JSP文件
      */
     var handleResource = function(_fileList){
-        var _rootPath = config.rootPath,
-            _temp = _loadTemp();
-        _fileList.forEach(function(fileItem){
-            var _originName = fileItem.originFileName,
-                _arr = _originName.split('\.'),
-                _fileName = _arr[0],
-                _suffixes = _arr[1],
-                _path = fileItem.path,
-                _file = path.join(_rootPath,_path,_originName),
-                _relFiles = fileItem.relFiles;
-            _getFileMd5Code(_file,function(md5){
-                console.log("哈希值:" + md5);
-                var md5File = _file.replace(_fileName,md5);
-                _isModify(md5File).then(function(isModify){
-                    if(isModify){
-                        console.log("文件有改动");
-                        var _txt = fs.readFileSync(_file, 'utf8');
-                        fs.writeFileSync(md5File, _txt, 'utf8');
-                        var _oldName = _temp[_fileName] || _fileName;
-                        //资源文件修改后，修改所有引用了该文件的JSP文件
-                        console.log("修改引用的文件");
-                        _relFiles.forEach(function(relFile){
-                            relFile = path.join(_rootPath,relFile);
-                            console.log(relFile + "->");
-                            _changeRel(relFile,_oldName + "." + _suffixes,md5 + "." + _suffixes);
-                            _temp[_fileName] = md5;
-                            fs.writeFileSync(process.cwd() + '/.qn_temp', JSON.stringify(_temp), 'utf8');
-                        });
-                    }
-                    else{
-                        console.log("该文件未改动");
-                    }
+        console.log("开始处理文件，配置为:%s",JSON.stringify(_fileList));
+        try{
+            var _rootPath = config.rootPath,
+                _temp = _loadTemp();
+            _fileList.forEach(function(fileItem){
+                var _originName = fileItem.originFileName,
+                    _arr = _originName.split('\.'),
+                    _fileName = _arr[0],
+                    _suffixes = _arr[1],
+                    _path = fileItem.path,
+                    _file = path.join(_rootPath,_path,_originName),
+                    _relFiles = fileItem.relFiles;
+                _getFileMd5Code(_file,function(md5){
+                    console.log("文件[%s]->[%s]",_originName,md5);
+                    var md5File = _file.replace(_fileName,md5);
+                    _isModify(md5File).then(function(isModify){
+                        if(isModify){
+                            console.log("[%s]文件已经修改,替换引用的文件",_originName);
+                            var _txt = fs.readFileSync(_file, 'utf8');
+                            fs.writeFileSync(md5File, _txt, 'utf8');
+                            var _oldName = _temp[_fileName] || _fileName;
+                            //资源文件修改后，修改所有引用了该文件的JSP文件
+                            console.log("替换引用的文件%s",JSON.stringify(_relFiles));
+                            _relFiles.forEach(function(relFile){
+                                relFile = path.join(_rootPath,relFile);
+                                console.log(relFile + "->");
+                                _changeRel(relFile,_oldName + "." + _suffixes,md5 + "." + _suffixes);
+                                _temp[_fileName] = md5;
+                                fs.writeFileSync(process.cwd() + '/.qn_temp', JSON.stringify(_temp), 'utf8');
+                            });
+                        }
+                        else{
+                            console.log("该文件未改动");
+                        }
+                    });
                 });
             });
-        });
+        }catch(e){
+            console.error(e);
+        }
     };
 
     /**
@@ -182,8 +186,8 @@ var path = require('path');
                         console.log("扫描所有引用了[%s]的文件开始",resource.originFileName);
                         _relArr.forEach(function(relFile){
                             if(_isRelTheFile(resource,relFile)){
-                                resource.relFile = resource.relFile || [];
-                                resource.relFile.push(relFile);
+                                resource.relFiles = resource.relFiles || [];
+                                resource.relFiles.push(path.join(relFile.path,relFile.originFileName));
                             }
                         });
                         console.log("扫描所有引用了[%s]的文件结束，一共找到[%s]个文件",resource.originFileName,_relArr.length);
