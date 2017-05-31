@@ -74,9 +74,8 @@ var path = require('path');
      * 如果当前目录下存在相同MD5值的文件，则表示未改动，跳过
      * 如果不存在相同MD5值的文件，表示有改动，则在同目录下生成重命名后的文件，并修改引用的JSP文件
      */
-    var handleResource = function(){
+    var handleResource = function(_fileList){
         var _rootPath = config.rootPath,
-            _fileList = config.fileList,
             _temp = _loadTemp();
         _fileList.forEach(function(fileItem){
             var _originName = fileItem.originFileName,
@@ -120,7 +119,7 @@ var path = require('path');
      * @returns {Array}
      * @private
      */
-    var _findResourceInPath = function(_relativePath,_array){
+    var _findFileInPath = function(_relativePath,_array){
         var files = fs.readdirSync(path.join(_rootPath + _relativePath));
         var promiseList = [];
         files.forEach(function (filename) {
@@ -137,23 +136,64 @@ var path = require('path');
                     console.log("读取到文件信息:%s",JSON.stringify(_resource));
                 }
                 else if (stats.isDirectory()) {
-                    _defer.resolve(Q.all(_findResourceInPath(path.join(_relativePath,filename),_array)));
+                    _defer.resolve(Q.all(_findFileInPath(path.join(_relativePath,filename),_array)));
                 }
             });
         });
         return promiseList;
     };
+
+    /**
+     * 是否引用了该文件
+     * @param resource
+     * @param relFile
+     * @private
+     */
+    var _isRelTheFile = function(resource,relFile){
+        var _originFile = resource.originFileName;
+        if(_originFile){
+            try{
+                var _f = path.join(_rootPath,relFile.path,relFile.originFileName);
+                console.log("读取文件：%s",_f);
+                var fileStream = fs.readFileSync(_f,"UTF-8");
+                var match = fileStream.match(_originFile);
+                if(match){
+                    console.log("%s文件引用了该文件",relFile);
+                }
+                return !!match;
+            }
+            catch(e){
+                console.error("读取文件失败!!!");
+                return false;
+            }
+        }
+    };
+
     var _main = function(){
+        var _fileList = config.fileList || {};
         if(config.autoMode){
             //扫描所有的resource文件，然后找出所有引用该文件的JSP文件
             var _arr = [];
-            Q.all(_findResourceInPath(path.join(_rootPath,config.resourceRoot),_arr)).then(function(){
-                console.log(_arr);
-
+            Q.all(_findFileInPath(path.join(_rootPath,config.resourceRoot),_arr)).then(function(){
+                console.log("一共扫描到的%s个资源文件",_arr.length);
+                var _relArr = [];
+                Q.all(_findFileInPath(path.join(_rootPath,config.relFileRoot),_relArr)).then(function(){
+                    _arr.forEach(function(resource){
+                        console.log("扫描所有引用了[%s]的文件开始",resource.originFileName);
+                        _relArr.forEach(function(relFile){
+                            if(_isRelTheFile(resource,relFile)){
+                                resource.relFile = resource.relFile || [];
+                                resource.relFile.push(relFile);
+                            }
+                        });
+                        console.log("扫描所有引用了[%s]的文件结束，一共找到[%s]个文件",resource.originFileName,_relArr.length);
+                    });
+                    handleResource(_arr);
+                });
             });
         }
         else{
-            handleResource();
+            handleResource(_fileList);
         }
     };
     _main();
