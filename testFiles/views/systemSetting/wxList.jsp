@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/systemSetting/all.css">
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/systemSetting/80e027513e98d742d7d930e50c02adda.css">
     <%@include file="/views/include/pageHeader.jsp"%>
     <title>微信客服</title>
 </head>

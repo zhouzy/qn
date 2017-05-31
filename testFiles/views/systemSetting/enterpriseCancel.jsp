@@ -4,7 +4,7 @@
 <head>
 <%@include file="/views/include/pageHeader.jsp"%>
 
-<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/systemSetting/all.css">
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/systemSetting/80e027513e98d742d7d930e50c02adda.css">
 <title>企业注销</title>
 </head>
 <body>

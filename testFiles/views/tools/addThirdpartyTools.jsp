@@ -6,7 +6,7 @@
     <title>添加第三方集成</title>
     <%@include file="/views/include/pageHeader.jsp" %>
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/selfField.css">
-    <%--<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/userField.css">--%>
+    <%--<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/ef3763efa8e67025e2caf0ced6deb474.css">--%>
 </head>
 <body>
 <div class="container-fluid">

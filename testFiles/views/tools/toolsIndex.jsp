@@ -9,7 +9,7 @@
     <title>第三方工具使用首页</title>
     <%@include file="/views/include/pageHeader.jsp" %>
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/innerFrame.css">
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/toolsIndex.css">
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/3fbfa3e735aef8c14de31eb189be21f6.css">
     <style type="text/css">
         .left-part-list li a:hover {
             background: #eff4f5 none repeat scroll 0 0;

@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <%@include file="/views/include/pageHeader.jsp"%>
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/systemSetting/all.css">
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/systemSetting/80e027513e98d742d7d930e50c02adda.css">
     <title>云客服帐号</title>
 </head>
 <body class="page">

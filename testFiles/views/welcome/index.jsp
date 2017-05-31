@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>首页下载页</title>
-    <link href="<%=request.getContextPath()%>/static/css/welcome.css" type="text/css" rel="stylesheet"/>
+    <link href="<%=request.getContextPath()%>/static/css/4428d32ce822350d1792e6eb8552963b.css" type="text/css" rel="stylesheet"/>
 </head>
 <body>
     <div class="top-bar">
