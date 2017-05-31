@@ -48,10 +48,10 @@ var path = require('path');
         var text = fs.readFileSync(relFile, 'utf8');
         // 将文件按行拆成数组
         var arr = text.split(/\r?\n/);
-        arr = arr.map(function (line,index){
+        arr.forEach(function(line,index){
             if(line.indexOf(oldFileName) >= 0){
                 console.log("替换源文件第" + index + "行");
-                return _updateLink(line,oldFileName,fileName);
+                arr[index] =  _updateLink(line,oldFileName,fileName);
             }
         });
         try{
@@ -70,9 +70,10 @@ var path = require('path');
      */
     var _updateLink = function(line,oldFileName,fileName){
         if(line.indexOf('data-origin-file') < 0){
-            line = line.replace(/\s/," data-origin-file=" + oldFileName);
+            line = line.replace(/(script|link)\s/,"$1 data-origin-file=" + oldFileName + " ");
         }
-        return line.replace(oldFileName,fileName);
+        line = line.replace(oldFileName,fileName);
+        return line;
     };
 
     var _loadTemp = function(){
