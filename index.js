@@ -50,12 +50,13 @@ var path = require('path');
         var arr = text.split(/\r?\n/);
         arr.forEach(function(line,index){
             if(line.indexOf(oldFileName) >= 0){
-                console.log("替换源文件第" + index + "行");
+                console.log("替换%s文件第%s行",relFile,index);
                 arr[index] =  _updateLink(line,oldFileName,fileName);
             }
         });
         try{
-            fs.writeFileSync(relFile, arr.join(EOL), 'utf8');
+            var fileStream = arr.join(EOL);
+            fs.writeFileSync(relFile, fileStream, 'utf8');
         }catch(e){
             console.dir(e);
         }
@@ -70,9 +71,9 @@ var path = require('path');
      */
     var _updateLink = function(line,oldFileName,fileName){
         if(line.indexOf('data-origin-file') < 0){
-            line = line.replace(/(script|link)\s/,"$1 data-origin-file=" + oldFileName + " ");
+            line = line.replace(/(script|link)\s/,"$1 data-origin-file=\"" + oldFileName + "\" ");
         }
-        line = line.replace(oldFileName,fileName);
+        line = line.replace("/" + oldFileName,"/" + fileName);
         return line;
     };
 
