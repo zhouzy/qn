@@ -1,0 +1,172 @@
+/**
+ * 外部框架布局样式
+ */
+/*左侧导航栏*/
+.tele-activity__left-part {
+  position: fixed;
+  z-index: 9;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 300px;
+  background-color: #fff;
+  border-right: 1px solid #e2eaec;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.tele-activity__left-part_close {
+  -webkit-transform: translateX(-290px);
+  -moz-transform: translateX(-290px);
+  -ms-transform: translateX(-290px);
+  -o-transform: translateX(-290px);
+  transform: translateX(-290px);
+}
+.tele-activity__left-part-content {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+.tele-activity__left-part-header {
+  width: 100%;
+  height: 55px;
+  line-height: 55px;
+  border-bottom: 1px solid #e2eaec;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.tele-activity__left-part-header-sidebar {
+  padding-right: 20px;
+  font-size: 16px;
+}
+.tele-activity__left-menu {
+  position: absolute;
+  top: 55px;
+  bottom: 0;
+  width: 100%;
+  padding-bottom: 10px;
+  overflow: auto;
+}
+.tele-activity__left-menu-header {
+  padding: 15px 0 5px 0;
+  margin: 0 0 10px 20px;
+  font-size: 12px;
+  font-weight: bolder;
+  color: #333;
+  border-bottom: 1px solid #e2eaec;
+}
+.tele-activity__left-menu-panel {
+  margin-bottom: 15px;
+}
+.tele-activity__left-menu-list {
+  padding-left: 0;
+  margin-bottom: 0;
+}
+.tele-activity__left-menu-list-item {
+  position: relative;
+}
+.tele-activity__left-menu-list-item.active .tele-activity__left-menu-item-link {
+  border-left-color: #21d376;
+  background-color: #eff4f5;
+}
+.tele-activity__left-menu-item-link {
+  position: relative;
+  display: block;
+  padding: 0 45px 0 17px;
+  height: 35px;
+  line-height: 35px;
+  color: #374051;
+  border-left: 3px solid #fff;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
+}
+.tele-activity__left-menu-item-link:hover,
+.tele-activity__left-menu-item-link:focus {
+  color: #374051;
+  background-color: #eff4f5 ;
+}
+.tele-activity__toggle-btn-box {
+  position: absolute;
+  z-index: 9;
+  top: 0;
+  bottom: 0;
+  right: -8px;
+  margin: auto;
+  height: 46px;
+}
+.tele-activity__toggle-btn {
+  padding: 10px 2px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #fff;
+  cursor: pointer;
+}
+.tele-activity__toggle-btn:hover {
+  color: #337ab7;
+}
+/*右侧部分*/
+.tele-activity__right-part {
+  position: absolute;
+  top: 0;
+  left: 300px;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-transition: left 0.3s;
+  -moz-transition: left 0.3s;
+  -o-transition: left 0.3s;
+  transition: left 0.3s;
+}
+.tele-activity__right-part_open {
+  left: 10px;
+}
+.tele-activity__right-part_open .bottom-collapse-toolbar {
+  left: 10px;
+}
+.tele-activity__right-part-header {
+  width: 100%;
+  height: 55px;
+  line-height: 55px;
+  border-bottom: 1px solid #e2eaec;
+  background-color: #fff;
+}
+.tele-activity__right-part-header-sidebar {
+  float: left;
+  font-size: 16px;
+  width: 100%;
+}
+.tele-activity__right-content {
+  height: 100%;
+}
+.bottom-collapse-toolbar {
+  background: #fff;
+  font-size: 14px;
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.15);
+  padding: 0 15px;
+  position: fixed;
+  bottom: -70px;
+  left: 300px;
+  right: 0;
+  height: 60px;
+  z-index: 20000;
+  border-top: 1px solid #f2f2f2;
+  text-align: right;
+  -webkit-transition: all ease 0.4s;
+  -moz-transition: all ease 0.4s;
+  -o-transition: all ease 0.4s;
+  transition: all ease 0.4s;
+}
+.bottom-collapse-toolbar.show {
+  bottom: 0;
+}
+.bottom-collapse-toolbar .left-btn {
+  position: absolute;
+  left: 5px;
+}

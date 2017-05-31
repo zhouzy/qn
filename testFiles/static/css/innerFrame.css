@@ -1,0 +1,291 @@
+header {
+  font-size: 16px;
+  padding-left: 20px;
+}
+header .btn {
+  font-size: 12px;
+  margin-right: 10px;
+}
+.part-header {
+  position: absolute;
+  top: 0;
+  z-index: 98;
+  height: 55px;
+  line-height: 55px;
+  border-bottom: 1px solid #e2eaec;
+  width: 100%;
+  background: #fff;
+}
+body > .panel-title {
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+}
+.left-is-closed > #left-part {
+  -webkit-transform: translateX(-290px);
+  -moz-transform: translateX(-290px);
+  -ms-transform: translateX(-290px);
+  -o-transform: translateX(-290px);
+  transform: translateX(-290px);
+}
+.left-is-closed > #left-part .main-contain {
+  display: none;
+}
+.left-is-closed > #right-part {
+  left: 10px;
+}
+.left-is-closed > #right-part #toolbar {
+  left: 10px;
+}
+#left-part {
+  width: 300px;
+  background: #fff;
+  border-right: 1px solid #e2eaec;
+  position: fixed;
+  z-index: 9;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+}
+#left-part .main-contain {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+#left-part .main-contain .part-header {
+  width: 299px;
+}
+#left-part .main-contain .left-content {
+  height: 100%;
+  overflow: auto;
+  padding: 60px 0;
+}
+#left-part .main-contain .left-content .left-content-panel {
+  margin-bottom: 15px;
+}
+#left-part .main-contain .left-content .left-content-panel .left-content-panel-header {
+  font-size: 12px;
+  color: #333;
+  font-weight: bolder;
+  padding: 15px 0 5px 0;
+  margin-bottom: 10px;
+  margin-left: 20px;
+  border-bottom: 1px solid #e2eaec;
+}
+#left-part .main-contain .left-content .left-content-panel .left-content-panel-header a {
+  margin-right: 5px;
+  font-size: 12px;
+  font-weight: 400;
+  float: right;
+}
+#left-part .main-contain .left-content .left-content-panel .left-content-panel-header:after {
+  content: "";
+  clear: both;
+}
+#left-part .main-contain .left-content .left-content-panel .timeline {
+  margin-left: 20px;
+}
+#left-part .main-contain .left-content .left-content-panel .timeline .row {
+  margin: 0;
+}
+#left-part > .toggle-btn-box {
+  position: absolute;
+  z-index: 9;
+  top: 0;
+  bottom: 0;
+  right: -8px;
+  margin: auto;
+  height: 46px;
+}
+#left-part > .toggle-btn-box .toggle-btn {
+  padding: 10px 2px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #fff;
+  cursor: pointer;
+}
+#left-part > .toggle-btn-box .toggle-btn:hover {
+  color: #337ab7;
+}
+#right-part {
+  position: fixed;
+  left: 300px;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  -webkit-transition: left 0.3s;
+  -moz-transition: left 0.3s;
+  -o-transition: left 0.3s;
+  transition: left 0.3s;
+}
+#right-part .right-content {
+  padding-top: 75px;
+  height: 100%;
+  overflow: auto;
+}
+#right-part .right-content .right-content-panel {
+  width: 100%;
+}
+#right-part .table-content .grid {
+  padding: 15px 0 5px 0;
+  margin-bottom: 50px;
+  background: #fff;
+  border: solid transparent;
+  border-width: 0 15px 0;
+  border-radius: 3px;
+  overflow: auto;
+}
+#right-part .table-content .grid table {
+  table-layout: auto;
+}
+#right-part .table-content .grid table td {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  white-space: nowrap;
+  color: #374051;
+}
+#right-part .table-content .grid table thead tr {
+  height: 45px;
+}
+#right-part .table-content .grid table thead tr th {
+  font-weight: normal;
+}
+#right-part .table-content .grid table tbody tr {
+  height: 45px;
+}
+#right-part .table-content .grid table tbody tr:nth-child(even) {
+  background: #F5F5F5;
+}
+#right-part .table-content .grid table tbody tr:hover {
+  background: #f9fff9;
+}
+#right-part #toolbar {
+  background: #fff;
+  font-size: 14px;
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.15);
+  padding: 0 15px;
+  position: fixed;
+  bottom: -70px;
+  left: 300px;
+  right: 0;
+  height: 60px;
+  z-index: 20000;
+  border-top: 1px solid #f2f2f2;
+  text-align: right;
+  -webkit-transition: all ease 0.4s;
+  -moz-transition: all ease 0.4s;
+  -o-transition: all ease 0.4s;
+  transition: all ease 0.4s;
+}
+#right-part #toolbar.show {
+  bottom: 0;
+}
+#right-part #toolbar .left-btn {
+  position: absolute;
+  left: 5px;
+}
+.left-part-list {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 0;
+}
+.left-part-list li {
+  position: relative;
+}
+.left-part-list li a {
+  color: #374051;
+  display: block;
+  height: 35px;
+  line-height: 35px;
+  border-left: 3px solid #fff;
+  padding-left: 17px;
+  padding-right: 45px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+}
+.left-part-list li a .num {
+  position: absolute;
+  right: 8px;
+  top: 10px;
+  min-width: 10px;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 3px 7px;
+  line-height: 1;
+  border-radius: 10px;
+  color: #fff;
+  text-align: center;
+  background-color: #ced6d8;
+}
+.left-part-list li a:hover {
+  background: #F9FFF9;
+}
+.left-part-list li.active a {
+  border-left-color: #21d376;
+  background: #eff4f5;
+}
+.left-part-list li.active a .num {
+  background: #ff595f;
+}
+.textarea-list textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 4px;
+  border: 1px solid #cecece;
+  border-radius: 5px;
+  resize: both;
+}
+.textarea-list textarea:hover,
+.textarea-list textarea:focus {
+  border-color: #009688;
+}
+.radio {
+  display: inline-block !important;
+}
+.form-group .radio label {
+  font-size: 14px;
+}
+.breadcrumbs {
+  padding-left: 0;
+  font-size: 16px;
+  margin: 15px 0 10px 0;
+  list-style-type: none;
+}
+.breadcrumbs::after {
+  clear: both;
+  content: ".";
+  display: block;
+  height: 0;
+  visibility: hidden;
+}
+.breadcrumbs li {
+  float: left;
+}
+.breadcrumbs li::after {
+  color: #999;
+  content: ">";
+  margin: 0 5px;
+}
+.breadcrumbs li:last-child::after {
+  display: none;
+}
+.breadcrumbs a {
+  color: #0096c4;
+}
+.breadcrumbs a:hover {
+  color: #48b6d7;
+}
+td #pagination .pagination {
+  float: right;
+  margin-top: 15px;
+}
+td #paginationGroup .pagination {
+  float: right;
+  margin-top: 15px;
+}

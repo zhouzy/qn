@@ -9,7 +9,7 @@
     <title>提交新工单</title>
     <%@include file="/views/include/pageHeader.jsp"%>
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/normalize.css">
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/b3529a1dc910d3089e33688fcd88c2ba.css">
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/activity.css">
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/script/lib/summernote/summernote.css">
 
 	<script src="<%=request.getContextPath()%>/script/lib/summernote/summernote.js" ></script>
