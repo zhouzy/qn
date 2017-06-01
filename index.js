@@ -10,7 +10,9 @@ var path = require('path');
 
     'use static';
 
+    var EOL = (process.platform === 'win32' ? '\r\n' : '\n');
     var _rootPath = config.rootPath;//文件根目录
+    var tempFileName = "qnResource.temp";
 
     var _getFileMd5Code = function(file,_cb){
         console.log("计算资源文件:[%s]哈希值",file);
@@ -44,7 +46,6 @@ var path = require('path');
      * @private
      */
     var _changeRel = function(relFile,oldFileName,fileName){
-        var EOL = (process.platform === 'win32' ? '\r\n' : '\n');
         var text = fs.readFileSync(relFile, 'utf8');
         // 将文件按行拆成数组
         var arr = text.split(/\r?\n/);
@@ -79,7 +80,7 @@ var path = require('path');
 
     var _loadTemp = function(){
         try{
-            var _temp = fs.readFileSync(path.join(process.cwd(),".qn_temp"),'utf-8');
+            var _temp = fs.readFileSync(path.join(process.cwd(),tempFileName),'utf-8');
             if(_temp){
                 return JSON.parse(_temp);
             }
@@ -99,24 +100,32 @@ var path = require('path');
      * @private
      */
     var _findFileInPath = function(_relativePath,_array){
-        var files = fs.readdirSync(path.join(_rootPath + _relativePath));
+        if(!_relativePath){
+            return [];
+        }
+        if(_relativePath && Object.prototype.toString.call(_relativePath) != '[object Array]'){
+            _relativePath = [_relativePath];
+        }
         var promiseList = [];
-        files.forEach(function (filename) {
-            var _resource = {};
-            var _defer = Q.defer();
-            promiseList.push(_defer.promise);
-            fs.stat(path.join(_rootPath,_relativePath,filename), function (err, stats) {
-                if (err) throw err;
-                if (stats.isFile()){
-                    _resource.originFileName = filename;
-                    _resource.path = _relativePath;
-                    _array.push(_resource);
-                    _defer.resolve(_resource);
-                    console.log("读取到文件信息:%s",JSON.stringify(_resource));
-                }
-                else if (stats.isDirectory()) {
-                    _defer.resolve(Q.all(_findFileInPath(path.join(_relativePath,filename),_array)));
-                }
+        _relativePath.forEach(function(retPath){
+            var files = fs.readdirSync(path.join(_rootPath + retPath));
+            files.forEach(function(filename){
+                var _resource = {};
+                var _defer = Q.defer();
+                promiseList.push(_defer.promise);
+                fs.stat(path.join(_rootPath,retPath,filename), function (err, stats) {
+                    if (err) throw err;
+                    if (stats.isFile()){
+                        _resource.originFileName = filename;
+                        _resource.path = retPath;
+                        console.log("读取到文件信息:%s",JSON.stringify(_resource));
+                        _array.push(_resource);
+                        _defer.resolve(_resource);
+                    }
+                    else if (stats.isDirectory()) {
+                        _defer.resolve(Q.all(_findFileInPath(path.join(retPath,filename),_array)));
+                    }
+                });
             });
         });
         return promiseList;
@@ -171,19 +180,22 @@ var path = require('path');
                     var md5File = _file.replace(_fileName,md5);
                     _isModify(md5File).then(function(isModify){
                         if(isModify){
-                            console.log("[%s]文件已经修改,替换引用的文件",_originName);
+                            console.log("[%s]文件已经修改,复制新文件",_originName);
                             var _txt = fs.readFileSync(_file, 'utf8');
                             fs.writeFileSync(md5File, _txt, 'utf8');
                             var _oldName = _temp[_fileName] || _fileName;
-                            //资源文件修改后，修改所有引用了该文件的JSP文件
-                            console.log("替换引用的文件%s",JSON.stringify(_relFiles));
-                            _relFiles.forEach(function(relFile){
-                                relFile = path.join(_rootPath,relFile);
-                                console.log(relFile + "->");
-                                _changeRel(relFile,_oldName + "." + _suffixes,md5 + "." + _suffixes);
-                                _temp[_fileName] = md5;
-                                fs.writeFileSync(process.cwd() + '/.qn_temp', JSON.stringify(_temp), 'utf8');
-                            });
+
+                            console.log("[%s]文件已经修改,替换所有引用了该资源文件的文件:%s",_originName,JSON.stringify(_relFiles));
+                            if(_relFiles && _relFiles.length){
+                                _relFiles.forEach(function(relFile){
+                                    relFile = path.join(_rootPath,relFile);
+                                    console.log(relFile + "->");
+                                    _changeRel(relFile,_oldName + "." + _suffixes,md5 + "." + _suffixes);
+                                    _temp[_fileName] = md5;
+
+                                    fs.writeFileSync(path.join(process.cwd(),tempFileName), JSON.stringify(_temp).replace(/\,/g,","+EOL), 'utf8');
+                                });
+                            }
                         }
                         else{
                             console.log("该文件未改动");
@@ -200,10 +212,10 @@ var path = require('path');
         if(config.autoMode){
             //扫描所有的resource文件，然后找出所有引用该文件的JSP文件
             var _arr = [];
-            Q.all(_findFileInPath(path.join(_rootPath,config.resourceRoot),_arr)).then(function(){
+            Q.all(_findFileInPath(config.resourceRoot,_arr)).then(function(){
                 console.log("一共扫描到的%s个资源文件",_arr.length);
                 var _relArr = [];
-                Q.all(_findFileInPath(path.join(_rootPath,config.relFileRoot),_relArr)).then(function(){
+                Q.all(_findFileInPath(config.relFileRoot,_relArr)).then(function(){
                     _arr.forEach(function(resource){
                         console.log("扫描所有引用了[%s]的文件开始",resource.originFileName);
                         _relArr.forEach(function(relFile){
