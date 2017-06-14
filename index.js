@@ -52,7 +52,7 @@ var path = require('path');
         // 将文件按行拆成数组
         var arr = text.split(/\r?\n/);
         arr.forEach(function(line,index){
-            if(line.indexOf(oldFileName) >= 0){
+            if(line.indexOf("/" + oldFileName) >= 0){
                 console.log("替换%s文件第%s行",relFile,index);
                 arr[index] =  _updateLink(line,oldFileName,fileName);
             }
@@ -186,7 +186,7 @@ var path = require('path');
                             console.log("[%s]文件已经修改,复制新文件", _fileName);
                             fs.writeFileSync(_md5File, fs.readFileSync(_file, 'utf8') , 'utf8');
                             var _oldName = _fileName;
-                            if(_temp){
+                            if(_temp && _temp[_index]){
                                 _oldName = _temp[_index]['qnResource'] || _fileName;
                             }
                             _fileList[_index]['qnResource'] = _md5FileName;
@@ -227,12 +227,12 @@ var path = require('path');
 
     let _rollbackLink = function(line){
         // 正则
-        const reg = /\/(\w+)\./;
+        const reg = /\/\w+\.\w+(\.css|\.js)/;
         const originReg = /data-origin-file="(\w+)/;
 
         if(line.indexOf('data-origin-file') >= 0){
             let originFile = originReg.exec(line)[1];
-            line = line.replace(reg, `/${originFile.split('.')[0]}.`);
+            line = line.replace(reg, `/${originFile.split('.')[0]}$1`);
         }
         
         return line;
