@@ -148,7 +148,7 @@ var path = require('path');
                 var fileStream = fs.readFileSync(_f,"UTF-8");
                 var match = fileStream.match(_originFile);
                 if(match){
-                    console.log("%s文件引用了该文件",relFile);
+                    console.log("%s文件引用了该文件",_f);
                 }
                 return !!match;
             }
@@ -169,7 +169,7 @@ var path = require('path');
         try{
             var _rootPath = config.rootPath,
                 _temp = _loadTemp();
-            _fileList.forEach(function(fileItem){
+            _fileList.forEach(function(fileItem,_index){
                 var _originName = fileItem.originFileName,
                     _arr = _originName.split('\.'),
                     _fileName = _arr[0],
@@ -179,26 +179,26 @@ var path = require('path');
                     _relFiles = fileItem.relFiles;
                 _getFileMd5Code(_file,function(md5){
                     console.log("文件[%s]->[%s]",_originName,md5);
-                    let _md5FileName = "qn_" + _originName + "_" + md5;
-                    let md5File = _file.replace(_fileName,_md5FileName);
-                    _isModify(md5File).then(function(isModify){
+                    let _md5FileName = "qn_" + _fileName + "." + md5;
+                    let _md5File = _file.replace(_fileName,_md5FileName);
+                    _isModify(_md5File).then(function(isModify){
                         if(isModify){
-                            console.log("[%s]文件已经修改,复制新文件", _md5FileName);
-                            var _txt = fs.readFileSync(_file, 'utf8');
-                            fs.writeFileSync(md5File, _txt, 'utf8');
-                            var _oldName = _temp[_fileName] || _fileName;
-
+                            console.log("[%s]文件已经修改,复制新文件", _fileName);
+                            fs.writeFileSync(_md5File, fs.readFileSync(_file, 'utf8') , 'utf8');
+                            var _oldName = _fileName;
+                            if(_temp){
+                                _oldName = _temp[_index]['qnResource'] || _fileName;
+                            }
+                            _fileList[_index]['qnResource'] = _md5FileName;
                             console.log("[%s]文件已经修改,替换所有引用了该资源文件的文件:%s",_originName,JSON.stringify(_relFiles));
                             if(_relFiles && _relFiles.length){
                                 _relFiles.forEach(function(relFile){
                                     relFile = path.join(_rootPath,relFile);
                                     console.log(relFile + "->");
-                                    _changeRel(relFile,_oldName + "." + _suffixes,md5 + "." + _suffixes);
-                                    _temp[_fileName] = md5;
-
-                                    fs.writeFileSync(path.join(process.cwd(),tempFileName), JSON.stringify(_temp).replace(/\,/g,","+EOL), 'utf8');
+                                    _changeRel(relFile,_oldName + "." + _suffixes,_md5FileName + "." + _suffixes);
                                 });
                             }
+                            fs.writeFileSync(path.join(process.cwd(),tempFileName), JSON.stringify(_fileList).replace(/\,/g,","+EOL), 'utf8');
                         }
                         else{
                             console.log("该文件未改动");
@@ -273,6 +273,7 @@ var path = require('path');
             //扫描所有的resource文件，然后找出所有引用该文件的JSP文件
             var _arr = [];
             Q.all(_findFileInPath(config.resourceRoot,_arr)).then(function(){
+                _arr = _arr.filter(el => el.originFileName.indexOf('qn_') < 0);
                 console.log("一共扫描到的%s个资源文件",_arr.length);
                 var _relArr = [];
                 Q.all(_findFileInPath(config.relFileRoot,_relArr)).then(function(){
@@ -293,7 +294,6 @@ var path = require('path');
         else{
             handleResource(_fileList);
         }
-        console.log("end===");
     };
 
     // 读取命令行参数
