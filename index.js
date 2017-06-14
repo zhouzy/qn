@@ -6,6 +6,9 @@ var fs = require('fs');
 var config = require('./qn-config.json');
 var Q = require('q');
 var path = require('path');
+// 解析html
+const cheerio = require('cheerio');
+
 (function(){
 
     'use static';
@@ -207,6 +210,63 @@ var path = require('path');
             console.error(e);
         }
     };
+
+    let _getRollbackFileList = function() {
+        // jsp文件
+        let jspFiles = [];
+        // 查询jsp文件
+        return Q.all(_findFileInPath(config.relFileRoot, jspFiles)).then(() => {
+            // 过滤所有非jsp文件
+            jspFiles = jspFiles.filter(file => {
+                return file.originFileName.indexOf('.jsp') >= 0;
+            });
+
+            return jspFiles;
+        });
+    };
+
+    let _rollbackLink = function(line){
+        // 正则
+        const reg = /\/(\w+)\./;
+        const originReg = /data-origin-file="(\w+)/;
+
+        if(line.indexOf('data-origin-file') >= 0){
+            let originFile = originReg.exec(line)[1];
+            line = line.replace(reg, `/${originFile.split('.')[0]}.`);
+        }
+        
+        return line;
+    };
+
+    let _rollbackRel = function(relFile){
+        var text = fs.readFileSync(relFile, 'utf8');
+        // 将文件按行拆成数组
+        var arr = text.split(/\r?\n/);
+        arr.forEach(function(line,index){
+            arr[index] =  _rollbackLink(line);
+        });
+        try{
+            var fileStream = arr.join(EOL);
+            fs.writeFileSync(relFile, fileStream, 'utf8');
+        }catch(e){
+            console.dir(e);
+        }
+    };
+
+    /**
+     * [_rollbackFiles 回滚相应路径下文件内引用的资源文件]
+     * @author Lesty
+     * @return undefined
+     */
+    let _rollbackFiles = function() {
+        const _rootPath = config.rootPath;
+        _getRollbackFileList().then(jspFiles => {
+            jspFiles.forEach(jspFile => {
+                _rollbackRel(path.join(_rootPath, jspFile.path, jspFile.originFileName));
+            });
+        });
+    };
+
     var _main = function(){
         var _fileList = config.fileList || {};
         if(config.autoMode){
@@ -235,5 +295,14 @@ var path = require('path');
         }
         console.log("end===");
     };
+
+    // 读取命令行参数
+    let cmd = process.argv[2];
+    if(cmd === '--rollback') { // 回滚
+        console.log('正在回滚···');
+        _rollbackFiles();
+        return 1;
+    }
+
     _main();
 })();
