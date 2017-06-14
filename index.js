@@ -179,10 +179,11 @@ var path = require('path');
                     _relFiles = fileItem.relFiles;
                 _getFileMd5Code(_file,function(md5){
                     console.log("文件[%s]->[%s]",_originName,md5);
-                    var md5File = _file.replace(_fileName,md5);
+                    let _md5FileName = "qn_" + _originName + "_" + md5;
+                    let md5File = _file.replace(_fileName,_md5FileName);
                     _isModify(md5File).then(function(isModify){
                         if(isModify){
-                            console.log("[%s]文件已经修改,复制新文件",_originName);
+                            console.log("[%s]文件已经修改,复制新文件", _md5FileName);
                             var _txt = fs.readFileSync(_file, 'utf8');
                             fs.writeFileSync(md5File, _txt, 'utf8');
                             var _oldName = _temp[_fileName] || _fileName;
