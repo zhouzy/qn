@@ -6,8 +6,6 @@ var fs = require('fs');
 var config = require('./qn-config.json');
 var Q = require('q');
 var path = require('path');
-// 解析html
-const cheerio = require('cheerio');
 
 (function(){
 
@@ -28,6 +26,7 @@ const cheerio = require('cheerio');
 
         stream.on('end', function() {
             var md5 = fsHash.digest('hex');
+            md5 = md5.substring(md5.length - 8);
             _cb && _cb(md5);
         });
     };
