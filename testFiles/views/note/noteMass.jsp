@@ -6,9 +6,9 @@
     <title>短信群发</title>
     <%@include file="/views/include/pageHeader.jsp"%>
         <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/script/lib/dropzone/dropzone.css"/>
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/innerFrame.css">
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/noteMass.css">
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/note.css">
+    <link data-origin-file="innerFrame.css" rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/innerFrame.css">
+    <link data-origin-file="noteMass.css" rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/noteMass.css">
+    <link data-origin-file="note.css" rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/note.css">
 </head>
 <body>
 <div class="note-contain-wrapper">
