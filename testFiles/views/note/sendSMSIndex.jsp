@@ -9,9 +9,9 @@
     <title>发送明细</title>
     <%@include file="/views/include/pageHeader.jsp"%>
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/script/lib/dropzone/dropzone.css"/>
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/innerFrame.css">
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/sendSMSIndex.css">
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/note.css">
+    <link data-origin-file="innerFrame.css" rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/innerFrame.css">
+    <link data-origin-file="sendSMSIndex.css" rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/sendSMSIndex.css">
+    <link data-origin-file="note.css" rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/note.css">
 
     <style>
         #formDetailId .form-group{

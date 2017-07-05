@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <title>短信渠道配置</title>
     <%@include file="/views/include/pageHeader.jsp"%>
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/innerFrame.css">
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/note.css">
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/note-config.css">
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/block-loading.css">
+    <link data-origin-file="innerFrame.css" rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/innerFrame.css">
+    <link data-origin-file="note.css" rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/note.css">
+    <link data-origin-file="note-config.css" rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/note-config.css">
+    <link data-origin-file="block-loading.css" rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/block-loading.css">
 </head>
 <body>
 <div class="note-contain-wrapper">

@@ -9,8 +9,8 @@
     <title>短信管理</title>
     <%@include file="/views/include/pageHeader.jsp"%>
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/script/lib/dropzone/dropzone.css"/>
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/innerFrame.css">
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/index.css">
+    <link data-origin-file="innerFrame.css" rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/innerFrame.css">
+    <link data-origin-file="index.css" rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/static/css/index.css">
 
 	<script src="<%=request.getContextPath()%>/script/lib/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
 	<script src="<%=request.getContextPath()%>/script/lib/bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>

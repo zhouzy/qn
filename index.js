@@ -227,8 +227,8 @@ var path = require('path');
 
     let _rollbackLink = function(line){
         // 正则
-        const reg = /\/\w+\.\w+(\.css|\.js)/;
-        const originReg = /data-origin-file="(\w+)/;
+        const reg = /\/[\w.-]+(\.\w+)/;
+        const originReg = /data-origin-file="(\S+)\.\w+/;
 
         if(line.indexOf('data-origin-file') >= 0){
             let originFile = originReg.exec(line)[1];
