@@ -13,7 +13,7 @@ var path = require('path');
 
     var EOL = (process.platform === 'win32' ? '\r\n' : '\n');
     var _rootPath = config.rootPath;//文件根目录
-    var tempFileName = "qnResource.temp";
+    var tempFileName = "_qn_temp.log";
 
     var _getFileMd5Code = function(file,_cb){
         console.log("计算资源文件:[%s]哈希值",file);
@@ -32,7 +32,7 @@ var path = require('path');
     };
 
     var _isModify = function(file){
-        console.log("判断文件[%s]是否存在",file);
+        console.log("判断文件[%s]是否修改",file);
         var defer = Q.defer();
         fs.exists(file,function(isExist){
             defer.resolve(!isExist);
@@ -105,7 +105,7 @@ var path = require('path');
         if(!_relativePath){
             return [];
         }
-        if(_relativePath && Object.prototype.toString.call(_relativePath) != '[object Array]'){
+        if(_relativePath && Object.prototype.toString.call(_relativePath) !== '[object Array]'){
             _relativePath = [_relativePath];
         }
         var promiseList = [];
