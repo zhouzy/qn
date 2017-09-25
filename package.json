@@ -10,5 +10,18 @@
   "license": "ISC",
   "dependencies": {
     "q": "^1.5.0"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhouzy/qn.git"
+  },
+  "keywords": [
+    "静态资源打包",
+    "哈希值"
+  ],
+  "bugs": {
+    "url": "https://github.com/zhouzy/qn/issues"
+  },
+  "homepage": "https://github.com/zhouzy/qn#readme"
 }
