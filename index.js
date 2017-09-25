@@ -17,7 +17,6 @@ var path = require('path');
     const resourceFilePrefix = "_qn_";
 
     var _getFileMd5Code = function(file,_cb){
-        console.log("计算资源文件:[%s]哈希值",file);
         var stream = fs.createReadStream(file);
         var fsHash = crypto.createHash('md5');
 
@@ -33,7 +32,6 @@ var path = require('path');
     };
 
     var _isModify = function(file){
-        console.log("判断文件[%s]是否修改",file);
         var defer = Q.defer();
         fs.exists(file,function(isExist){
             defer.resolve(!isExist);
@@ -172,7 +170,7 @@ var path = require('path');
      * 如果不存在相同MD5值的文件，表示有改动，则在同目录下生成重命名后的文件，并修改引用的JSP文件
      */
     var handleResource = function(_fileList){
-        console.log(" 开始处理文件，配置为:%s",JSON.stringify(_fileList));
+        console.log(" 2.开始处理文件，配置为:%s",JSON.stringify(_fileList));
         try{
             let _rootPath = config.rootPath,
                 _temp = _loadTemp();
@@ -185,7 +183,7 @@ var path = require('path');
                     _file = path.join(_rootPath,_path,_originName),
                     _relFiles = fileItem.relFiles;
                 _getFileMd5Code(_file,function(md5){
-                    console.log("  文件 [%s] 修改为 [%s] ",_originName,md5);
+                    console.log("    文件 [%s] 哈希值:%s ",_originName,md5);
                     let _md5FileName = resourceFilePrefix + _fileName + "." + md5;
                     let _md5File = _file.replace(_fileName,_md5FileName);
                     _isModify(_md5File).then(function(isModify){
@@ -216,7 +214,7 @@ var path = require('path');
                             fs.writeFileSync(path.join(process.cwd(),tempFileName), JSON.stringify(_fileList).replace(/\,/g,","+EOL), 'utf8');
                         }
                         else{
-                            console.log("  该文件未改动");
+                            console.log("    [%s]已经存在，跳过",_md5File);
                         }
                     });
                 });
@@ -282,27 +280,28 @@ var path = require('path');
     };
 
     var _main = function(){
-        console.log("开始打包资源文件====");
+        console.log("开始打包资源文件====\n");
         var _fileList = config.fileList || {};
         if(config.autoMode){
             //扫描所有的resource文件，然后找出所有引用该文件的JSP文件
             let _resources = [];
-            console.log("  读取HTML文件和资源文件");
+            console.log("  1.读取资源文件");
             Q.all(_findFileInPath(config.resourceRoot,_resources)).then(function(){
                 _resources = _resources.filter(resource => resource.originFileName.indexOf(resourceFilePrefix) < 0);
-                console.log("  资源文件总数:[%s]",_resources.length);
+                console.log("  资源文件总数:%s\n",_resources.length);
                 let _htmlFiles = [];
+                console.log("  读取HTML文件");
                 Q.all(_findFileInPath(config.relFileRoot,_htmlFiles)).then(function(){
-                    console.log("  HTML文件总数:[%s]",_htmlFiles.length);
+                    console.log("  HTML文件总数:%s\n",_htmlFiles.length);
                     _resources.forEach(function(resource){
-                        console.log("  读取引用了[%s]的所有文件START",resource.originFileName);
+                        console.log("  读取引用了[%s]的所有文件",resource.originFileName);
                         _htmlFiles.forEach(function(htmlFile){
                             if(_isRelTheFile(resource,htmlFile)){
                                 resource.relFiles = resource.relFiles || [];
                                 resource.relFiles.push(path.join(htmlFile.path,htmlFile.originFileName));
                             }
                         });
-                        console.log("  一共[%s]文件引用了[%s]文件",_htmlFiles.length,resource.originFileName);
+                        console.log("  引用 [%s] 文件总数:%s\n",resource.originFileName,_htmlFiles.length);
                     });
                     handleResource(_resources);
                 });
