@@ -46,13 +46,17 @@ var path = require('path');
      * @param fileName
      * @private
      */
-    var _changeRel = function(relFile,oldFileName,fileName){
+    var _changeRel = function(relFile,relativeOldFileName,relativeFileName){
         var text = fs.readFileSync(relFile, 'utf8');
         // 将文件按行拆成数组
         var arr = text.split(/\r?\n/);
+        let oldFileName = relativeFileName.split("/");
+        oldFileName = oldFileName[oldFileName.length-1];
+        let fileName = relativeFileName.split("/");
+        fileName = fileName[fileName.length-1];
         arr.forEach(function(line,index){
-            if(line.indexOf("/" + oldFileName) >= 0){
-                console.log("替换%s文件第%s行",relFile,index);
+            if(line.indexOf("/" + relativeOldFileName) >= 0){
+                console.log("    替换%s文件第%s行",relFile,index);
                 arr[index] =  _updateLink(line,oldFileName,fileName);
             }
         });
@@ -239,7 +243,7 @@ var path = require('path');
 
     let _rollbackLink = function(line){
         // 正则
-        const reg = /\/[\w.-]+(\.\w+)/;
+        const reg = /\/_qn_[\w.-]+(\.\w+)/;
         const originReg = /data-origin-file="(\S+)\.\w+/;
 
         if(line.indexOf('data-origin-file') >= 0){
@@ -251,6 +255,7 @@ var path = require('path');
     };
 
     let _rollbackRel = function(relFile){
+        console.log("  处理文件 [%s]",relFile);
         var text = fs.readFileSync(relFile, 'utf8');
         // 将文件按行拆成数组
         var arr = text.split(/\r?\n/);
@@ -315,7 +320,7 @@ var path = require('path');
     // 读取命令行参数
     let cmd = process.argv[2];
     if(cmd === '--rollback') { // 回滚
-        console.log('正在回滚···');
+        console.log('开始回滚====');
         _rollbackFiles();
         return 1;
     }
