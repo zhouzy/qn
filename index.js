@@ -50,10 +50,12 @@ var path = require('path');
         var text = fs.readFileSync(relFile, 'utf8');
         // 将文件按行拆成数组
         var arr = text.split(/\r?\n/);
-        let oldFileName = relativeFileName.split("/");
+        let oldFileName = relativeOldFileName.split("/");
         oldFileName = oldFileName[oldFileName.length-1];
+
         let fileName = relativeFileName.split("/");
         fileName = fileName[fileName.length-1];
+
         arr.forEach(function(line,index){
             if(line.indexOf("/" + relativeOldFileName) >= 0){
                 console.log("    替换%s文件第%s行",relFile,index);
@@ -76,10 +78,10 @@ var path = require('path');
      * @private
      */
     var _updateLink = function(line,oldFileName,fileName){
+        line = line.replace("/" + oldFileName,"/" + fileName);
         if(line.indexOf('data-origin-file') < 0){
             line = line.replace(/(script|link)\s/,"$1 data-origin-file=\"" + oldFileName + "\" ");
         }
-        line = line.replace("/" + oldFileName,"/" + fileName);
         return line;
     };
 
