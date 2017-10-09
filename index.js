@@ -192,36 +192,34 @@ var path = require('path');
                     console.log("    文件 [%s] 哈希值:%s ",_originName,md5);
                     let _md5FileName = resourceFilePrefix + _fileName + "." + md5;
                     let _md5File = _file.replace(_fileName,_md5FileName);
+                    let _oldName = _fileName;
                     _isModify(_md5File).then(function(isModify){
                         if(isModify){
                             console.log("  [%s] 已经修改,生成新文件", _fileName);
                             fs.writeFileSync(_md5File, fs.readFileSync(_file, 'utf8') , 'utf8');
-
-                            var _oldName = _fileName;
                             if(_temp && _temp[_index]){
                                 _oldName = _temp[_index]['qnResource'] || _fileName;
                             }
                             _fileList[_index]['qnResource'] = _md5FileName;
-
-                            console.log("  [%s] 已经修改,处理引用了该文件的HTML文件:%s",_originName,JSON.stringify(_relFiles));
-                            if(_relFiles && _relFiles.length){
-                                let _relativePath = _path;
-                                if(!/.+\/$/.test(_relativePath)){
-                                    _relativePath += "/";
-                                }
-                                let _relativeOriginFile = _relativePath + _oldName + "." + _suffixes;
-                                let _relativeNewFile = _relativePath + _md5FileName + "." + _suffixes;
-
-                                _relFiles.forEach(function(relFile){
-                                    relFile = path.join(_rootPath,relFile);
-                                    _changeRel(relFile,_relativeOriginFile,_relativeNewFile);
-                                });
-                            }
-                            fs.writeFileSync(path.join(process.cwd(),tempFileName), JSON.stringify(_fileList).replace(/\,/g,","+EOL), 'utf8');
                         }
                         else{
-                            console.log("    [%s]已经存在，跳过",_md5File);
+                            console.log("    [%s] 哈希文件已经存在",_md5File);
                         }
+                        console.log("    处理引用了该文件的HTML文件:%s",JSON.stringify(_relFiles));
+                        if(_relFiles && _relFiles.length){
+                            let _relativePath = _path;
+                            if(!/.+\/$/.test(_relativePath)){
+                                _relativePath += "/";
+                            }
+                            let _relativeOriginFile = _relativePath + _oldName + "." + _suffixes;
+                            let _relativeNewFile = _relativePath + _md5FileName + "." + _suffixes;
+
+                            _relFiles.forEach(function(relFile){
+                                relFile = path.join(_rootPath,relFile);
+                                _changeRel(relFile,_relativeOriginFile,_relativeNewFile);
+                            });
+                        }
+                        fs.writeFileSync(path.join(process.cwd(),tempFileName), JSON.stringify(_fileList).replace(/\,/g,","+EOL), 'utf8');
                     });
                 });
             });
@@ -251,6 +249,7 @@ var path = require('path');
         if(line.indexOf('data-origin-file') >= 0){
             let originFile = originReg.exec(line)[1];
             line = line.replace(reg, `/${originFile.split('.')[0]}$1`);
+            line = line.replace(/\sdata-origin-file=\".+?\"\s/," ");
         }
         
         return line;
