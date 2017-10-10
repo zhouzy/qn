@@ -6,6 +6,6 @@
     "path" : "testFiles/static/css/",
     "relFiles" : ["testFiles/views/myActivity.jsp","testFiles/views/uploadNewQuestion.jsp"]
   }],
-  "resourceRoot" : ["testFiles/static/css","testFiles/static/css2"],
+  "resourceRoot" : ["testFiles/static"],
   "relFileRoot" : ["testFiles/views/"]
 }

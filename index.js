@@ -124,7 +124,7 @@ var path = require('path');
                     if (err) throw err;
                     if (stats.isFile()){
                         _resource.originFileName = filename;
-                        _resource.path = retPath;
+                        _resource.path = retPath.replace(/\\/g,"/");
                         console.log("    读取到文件信息:%s",JSON.stringify(_resource));
                         _array.push(_resource);
                         _defer.resolve(_resource);
@@ -300,14 +300,14 @@ var path = require('path');
                 Q.all(_findFileInPath(config.relFileRoot,_htmlFiles)).then(function(){
                     console.log("  HTML文件总数:%s\n",_htmlFiles.length);
                     _resources.forEach(function(resource){
-                        console.log("  读取引用了[%s]的所有文件",resource.originFileName);
+                        console.log("  读取引用了[%s]的所有文件",path.join(resource.path + "/" + resource.originFileName));
                         _htmlFiles.forEach(function(htmlFile){
+                            resource.relFiles = resource.relFiles || [];
                             if(_isRelTheFile(resource,htmlFile)){
-                                resource.relFiles = resource.relFiles || [];
                                 resource.relFiles.push(path.join(htmlFile.path,htmlFile.originFileName));
                             }
                         });
-                        console.log("  引用 [%s] 文件总数:%s\n",resource.originFileName,_htmlFiles.length);
+                        console.log("  引用 [%s] 文件总数:%s\n",resource.originFileName,resource.relFiles.length);
                     });
                     handleResource(_resources);
                 });
