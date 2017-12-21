@@ -1,24 +1,21 @@
 /**
  * Created by zhouzhongyu on 2017/5/24.
  */
-var crypto = require('crypto');
-var fs = require('fs');
-var config = require('./qn-config.json');
-var Q = require('q');
-var path = require('path');
+let crypto = require('crypto');
+let fs = require('fs');
+let config = require('./qn-config.json');
+let Q = require('q');
+let path = require('path');
 
 (function(){
-
-    'use static';
-
     const EOL = (process.platform === 'win32' ? '\r\n' : '\n');
     const _rootPath = config.rootPath;//文件根目录
     const tempFileName = "_qn_temp.log";
     const resourceFilePrefix = "_qn_";
 
-    var _getFileMd5Code = function(file,_cb){
-        var stream = fs.createReadStream(file);
-        var fsHash = crypto.createHash('md5');
+    let _getFileMd5Code = function(file,_cb){
+        let stream = fs.createReadStream(file);
+        let fsHash = crypto.createHash('md5');
 
         stream.on('data', function(d) {
             fsHash.update(d);
@@ -31,8 +28,8 @@ var path = require('path');
         });
     };
 
-    var _isModify = function(file){
-        var defer = Q.defer();
+    let _isModify = function(file){
+        let defer = Q.defer();
         fs.exists(file,function(isExist){
             defer.resolve(!isExist);
         });
@@ -46,7 +43,7 @@ var path = require('path');
      * @param fileName
      * @private
      */
-    var _changeRel = function(relFile,relativeOldFileName,relativeFileName){
+    let _changeRel = function(relFile,relativeOldFileName,relativeFileName){
         var text = fs.readFileSync(relFile, 'utf8');
         // 将文件按行拆成数组
         var arr = text.split(/\r?\n/);
@@ -58,7 +55,7 @@ var path = require('path');
 
         arr.forEach(function(line,index){
             if(line.indexOf("/" + relativeOldFileName) >= 0){
-                console.log("    替换%s文件第%s行",relFile,index);
+                console.log("\t\t替换%s文件第%s行",relFile,index);
                 arr[index] =  _updateLink(line,oldFileName,fileName);
             }
         });
@@ -77,7 +74,7 @@ var path = require('path');
      * @param fileName
      * @private
      */
-    var _updateLink = function(line,oldFileName,fileName){
+    let _updateLink = function(line,oldFileName,fileName){
         line = line.replace("/" + oldFileName,"/" + fileName);
         if(line.indexOf('data-origin-file') < 0){
             line = line.replace(/(script|link)\s/,"$1 data-origin-file=\"" + oldFileName + "\" ");
@@ -85,7 +82,7 @@ var path = require('path');
         return line;
     };
 
-    var _loadTemp = function(){
+    let _loadTemp = function(){
         try{
             var _temp = fs.readFileSync(path.join(process.cwd(),tempFileName),'utf-8');
             if(_temp){
@@ -106,26 +103,26 @@ var path = require('path');
      * @returns {Array}
      * @private
      */
-    var _findFileInPath = function(_relativePath,_array){
+    let _findFileInPath = function(_relativePath,_array){
         if(!_relativePath){
             return [];
         }
         if(_relativePath && Object.prototype.toString.call(_relativePath) !== '[object Array]'){
             _relativePath = [_relativePath];
         }
-        var promiseList = [];
+        let promiseList = [];
         _relativePath.forEach(function(retPath){
-            var files = fs.readdirSync(path.join(_rootPath + retPath));
+            let files = fs.readdirSync(path.join(_rootPath + retPath));
             files.forEach(function(filename){
-                var _resource = {};
-                var _defer = Q.defer();
+                let _resource = {};
+                let _defer = Q.defer();
                 promiseList.push(_defer.promise);
                 fs.stat(path.join(_rootPath,retPath,filename), function (err, stats) {
                     if (err) throw err;
                     if (stats.isFile()){
                         _resource.originFileName = filename;
                         _resource.path = retPath.replace(/\\/g,"/");
-                        console.log("    读取到文件信息:%s",JSON.stringify(_resource));
+                        console.log("\t取到文件:%s",JSON.stringify(_resource));
                         _array.push(_resource);
                         _defer.resolve(_resource);
                     }
@@ -144,7 +141,7 @@ var path = require('path');
      * @param relFile
      * @private
      */
-    var _isRelTheFile = function(resource,htmlFile){
+    let _isRelTheFile = function(resource,htmlFile){
         if(!/.+\/$/.test(resource.path)){
             resource.path += "/";
         }
@@ -152,19 +149,17 @@ var path = require('path');
 
         if(_originFile){
             try{
-                var _f = path.join(_rootPath,htmlFile.path,htmlFile.originFileName);
-                console.log("    读取文件：%s",_f);
-                var fileStream = fs.readFileSync(_f,"UTF-8");
-
-                var match = fileStream.match(_originFile);
-
+                let _f = path.join(_rootPath,htmlFile.path,htmlFile.originFileName);
+                console.log("\t读取文件：%s",_f);
+                let fileStream = fs.readFileSync(_f,"UTF-8");
+                let match = fileStream.match(_originFile);
                 if(match){
-                    console.log("   [%s]引用了该文件",_f);
+                    console.log("\t[%s]引用了该文件",_f);
                 }
                 return !!match;
             }
             catch(e){
-                console.error("    读取文件失败!");
+                console.error("\t读取文件失败!");
                 return false;
             }
         }
@@ -175,8 +170,8 @@ var path = require('path');
      * 如果当前目录下存在相同MD5值的文件，则表示未改动，跳过
      * 如果不存在相同MD5值的文件，表示有改动，则在同目录下生成重命名后的文件，并修改引用的JSP文件
      */
-    var handleResource = function(_fileList){
-        console.log(" 2.开始处理文件，配置为:%s",JSON.stringify(_fileList));
+    let handleResource = function(_fileList){
+        console.log("2.开始处理文件，配置为:%s",JSON.stringify(_fileList));
         try{
             let _rootPath = config.rootPath,
                 _temp = _loadTemp();
@@ -189,13 +184,13 @@ var path = require('path');
                     _file = path.join(_rootPath,_path,_originName),
                     _relFiles = fileItem.relFiles;
                 _getFileMd5Code(_file,function(md5){
-                    console.log("    文件 [%s] 哈希值:%s ",_originName,md5);
+                    console.log("\t文件 [%s] 哈希值:%s ",_originName,md5);
                     let _md5FileName = resourceFilePrefix + _fileName + "." + md5;
                     let _md5File = _file.replace(_fileName,_md5FileName);
                     let _oldName = _fileName;
                     _isModify(_md5File).then(function(isModify){
                         if(isModify){
-                            console.log("  [%s] 已经修改,生成新文件", _fileName);
+                            console.log("\t[%s] 已经修改,生成新文件", _fileName);
                             fs.writeFileSync(_md5File, fs.readFileSync(_file, 'utf8') , 'utf8');
                             if(_temp && _temp[_index]){
                                 _oldName = _temp[_index]['qnResource'] || _fileName;
@@ -203,9 +198,9 @@ var path = require('path');
                             _fileList[_index]['qnResource'] = _md5FileName;
                         }
                         else{
-                            console.log("    [%s] 哈希文件已经存在",_md5File);
+                            console.log("\t[%s] 哈希文件已经存在",_md5File);
                         }
-                        console.log("    处理引用了该文件的HTML文件:%s",JSON.stringify(_relFiles));
+                        console.log("\t处理引用了该文件的HTML文件:%s",JSON.stringify(_relFiles));
                         if(_relFiles && _relFiles.length){
                             let _relativePath = _path;
                             if(!/.+\/$/.test(_relativePath)){
@@ -232,6 +227,7 @@ var path = require('path');
         // jsp文件
         let jspFiles = [];
         // 查询jsp文件
+		console.info("读取JSP文件:");
         return Q.all(_findFileInPath(config.relFileRoot, jspFiles)).then(() => {
             // 过滤所有非jsp文件
             jspFiles = jspFiles.filter(file => {
@@ -241,30 +237,30 @@ var path = require('path');
         });
     };
 
-    let _rollbackLink = function(line){
-        // 正则
+    let _rollbackLink = function(line,lineNumber){
         const reg = /\/_qn_[\w.-]+(\.\w+)/;
         const originReg = /data-origin-file="(\S+)\.\w+/;
-
         if(line.indexOf('data-origin-file') >= 0){
+			console.info('\t\t\t重写引用地址');
+			console.info('\t\t\t文件行数:%s',lineNumber);
+			console.info('\t\t\t%s',line);
             let originFile = originReg.exec(line)[1];
             line = line.replace(reg, `/${originFile.split('.')[0]}$1`);
             line = line.replace(/\sdata-origin-file=\".+?\"\s/," ");
         }
-        
         return line;
     };
 
     let _rollbackRel = function(relFile){
-        console.log("  处理文件 [%s]",relFile);
-        var text = fs.readFileSync(relFile, 'utf8');
+        console.log("\t\t解析文件:[%s]",relFile);
+        let text = fs.readFileSync(relFile, 'utf8');
         // 将文件按行拆成数组
-        var arr = text.split(/\r?\n/);
+        let arr = text.split(/\r?\n/);
         arr.forEach(function(line,index){
-            arr[index] =  _rollbackLink(line);
+            arr[index] =  _rollbackLink(line,index);
         });
         try{
-            var fileStream = arr.join(EOL);
+            let fileStream = arr.join(EOL);
             fs.writeFileSync(relFile, fileStream, 'utf8');
         }catch(e){
             console.dir(e);
@@ -283,31 +279,53 @@ var path = require('path');
                 _rollbackRel(path.join(_rootPath, jspFile.path, jspFile.originFileName));
             });
         });
+        let _resources = [];
+        Q.all(_findFileInPath(config.resourceRoot,_resources)).then(function(){
+        	let toDeleteFiles = [];
+            _resources.forEach(file => {
+                console.log(JSON.stringify(file));
+                if(/^\_qn\_.+/.test(file.originFileName)){
+                	toDeleteFiles.push(file);
+                }
+            });
+            toDeleteFiles.forEach(file => {
+            	_deleteFile(file);
+			})
+        });
     };
 
-    var _main = function(){
+    let _deleteFile = function(fileInfo){
+        if(!/.+\/$/.test(fileInfo.path)){
+            fileInfo.path += "/";
+        }
+        let filePath = fileInfo.path + fileInfo.originFileName;
+        console.warn("删除文件:" + filePath);
+        fs.unlinkSync(filePath);
+    };
+
+    let _main = function(){
         console.log("开始打包资源文件====\n");
-        var _fileList = config.fileList || {};
+        let _fileList = config.fileList || {};
         if(config.autoMode){
             //扫描所有的resource文件，然后找出所有引用该文件的JSP文件
             let _resources = [];
-            console.log("  1.读取资源文件");
+            console.log("\t1.读取资源文件");
             Q.all(_findFileInPath(config.resourceRoot,_resources)).then(function(){
                 _resources = _resources.filter(resource => resource.originFileName.indexOf(resourceFilePrefix) < 0);
-                console.log("  资源文件总数:%s\n",_resources.length);
+                console.log("\t资源文件总数:%s\n",_resources.length);
                 let _htmlFiles = [];
-                console.log("  读取HTML文件");
+                console.log("\t读取HTML文件");
                 Q.all(_findFileInPath(config.relFileRoot,_htmlFiles)).then(function(){
-                    console.log("  HTML文件总数:%s\n",_htmlFiles.length);
+                    console.log("\tHTML文件总数:%s\n",_htmlFiles.length);
                     _resources.forEach(function(resource){
-                        console.log("  读取引用了[%s]的所有文件",path.join(resource.path + "/" + resource.originFileName));
+                        console.log("\t读取引用了[%s]的所有文件",path.join(resource.path + "/" + resource.originFileName));
                         _htmlFiles.forEach(function(htmlFile){
                             resource.relFiles = resource.relFiles || [];
                             if(_isRelTheFile(resource,htmlFile)){
                                 resource.relFiles.push(path.join(htmlFile.path,htmlFile.originFileName));
                             }
                         });
-                        console.log("  引用 [%s] 文件总数:%s\n",resource.originFileName,resource.relFiles.length);
+                        console.log("\t引用 [%s] 文件总数:%s\n",resource.originFileName,resource.relFiles.length);
                     });
                     handleResource(_resources);
                 });
@@ -321,7 +339,7 @@ var path = require('path');
     // 读取命令行参数
     let cmd = process.argv[2];
     if(cmd === '--rollback') { // 回滚
-        console.log('开始回滚====');
+        console.log('开始回滚');
         _rollbackFiles();
         return 1;
     }
