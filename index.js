@@ -117,12 +117,13 @@ let path = require('path');
                 let _resource = {};
                 let _defer = Q.defer();
                 promiseList.push(_defer.promise);
+
                 fs.stat(path.join(_rootPath,retPath,filename), function (err, stats) {
                     if (err) throw err;
                     if (stats.isFile()){
                         _resource.originFileName = filename;
                         _resource.path = retPath.replace(/\\/g,"/");
-                        console.log("\t取到文件:%s",JSON.stringify(_resource));
+                        console.log("\t\t%s",path.join(_resource.path,_resource.originFileName));
                         _array.push(_resource);
                         _defer.resolve(_resource);
                     }
@@ -150,16 +151,13 @@ let path = require('path');
         if(_originFile){
             try{
                 let _f = path.join(_rootPath,htmlFile.path,htmlFile.originFileName);
-                console.log("\t读取文件：%s",_f);
                 let fileStream = fs.readFileSync(_f,"UTF-8");
                 let match = fileStream.match(_originFile);
-                if(match){
-                    console.log("\t[%s]引用了该文件",_f);
-                }
+				console.log("\t\t[%s] 是否引用该文件 [%s]",_f,!!match);
                 return !!match;
             }
             catch(e){
-                console.error("\t读取文件失败!");
+                console.error("\t\t读取文件失败!");
                 return false;
             }
         }
@@ -171,7 +169,9 @@ let path = require('path');
      * 如果不存在相同MD5值的文件，表示有改动，则在同目录下生成重命名后的文件，并修改引用的JSP文件
      */
     let handleResource = function(_fileList){
-        console.log("2.开始处理文件，配置为:%s",JSON.stringify(_fileList));
+        console.log("2.开始处理文件，配置为:");
+        console.dir(_fileList);
+        console.log("\n");
         try{
             let _rootPath = config.rootPath,
                 _temp = _loadTemp();
@@ -184,23 +184,23 @@ let path = require('path');
                     _file = path.join(_rootPath,_path,_originName),
                     _relFiles = fileItem.relFiles;
                 _getFileMd5Code(_file,function(md5){
-                    console.log("\t文件 [%s] 哈希值:%s ",_originName,md5);
+                    console.log("\t文件 [%s] 的哈希值:%s ",_file,md5);
                     let _md5FileName = resourceFilePrefix + _fileName + "." + md5;
                     let _md5File = _file.replace(_fileName,_md5FileName);
                     let _oldName = _fileName;
                     _isModify(_md5File).then(function(isModify){
                         if(isModify){
-                            console.log("\t[%s] 已经修改,生成新文件", _fileName);
+                            console.log("\n\t[%s] 已经修改,生成新文件", _fileName);
                             fs.writeFileSync(_md5File, fs.readFileSync(_file, 'utf8') , 'utf8');
                             if(_temp && _temp[_index]){
                                 _oldName = _temp[_index]['qnResource'] || _fileName;
                             }
                             _fileList[_index]['qnResource'] = _md5FileName;
+							console.log("\t\t处理引用该文件的模板文件:[%s]",_relFiles.join(","));
                         }
                         else{
                             console.log("\t[%s] 哈希文件已经存在",_md5File);
                         }
-                        console.log("\t处理引用了该文件的HTML文件:%s",JSON.stringify(_relFiles));
                         if(_relFiles && _relFiles.length){
                             let _relativePath = _path;
                             if(!/.+\/$/.test(_relativePath)){
@@ -242,8 +242,7 @@ let path = require('path');
         const originReg = /data-origin-file="(\S+)\.\w+/;
         if(line.indexOf('data-origin-file') >= 0){
 			console.info('\t\t\t重写引用地址');
-			console.info('\t\t\t文件行数:%s',lineNumber);
-			console.info('\t\t\t%s',line);
+			console.info('\t\t\t%s:%s',lineNumber,line);
             let originFile = originReg.exec(line)[1];
             line = line.replace(reg, `/${originFile.split('.')[0]}$1`);
             line = line.replace(/\sdata-origin-file=\".+?\"\s/," ");
@@ -280,6 +279,7 @@ let path = require('path');
             });
         });
         let _resources = [];
+		console.log("读取资源文件:");
         Q.all(_findFileInPath(config.resourceRoot,_resources)).then(function(){
         	let toDeleteFiles = [];
             _resources.forEach(file => {
@@ -318,7 +318,7 @@ let path = require('path');
                 Q.all(_findFileInPath(config.relFileRoot,_htmlFiles)).then(function(){
                     console.log("\tHTML文件总数:%s\n",_htmlFiles.length);
                     _resources.forEach(function(resource){
-                        console.log("\t读取引用了[%s]的所有文件",path.join(resource.path + "/" + resource.originFileName));
+                        console.log("\t扫描引用[%s]的文件",path.join(resource.path + "/" + resource.originFileName));
                         _htmlFiles.forEach(function(htmlFile){
                             resource.relFiles = resource.relFiles || [];
                             if(_isRelTheFile(resource,htmlFile)){
